@@ -1,0 +1,32 @@
+﻿.col-md {
+    padding: 0;
+    margin: 5px;
+}
+
+.card {
+    margin: 5px 0 3px 0;
+}
+
+.carousel-Img {
+    width: auto;
+    height: 300px;
+    max-height: 300px;
+}
+
+.p{
+    margin-bottom: 0;
+}
+
+
+.navbar {
+    padding: 0 30px 0 50px !important;
+}
+
+a{
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+

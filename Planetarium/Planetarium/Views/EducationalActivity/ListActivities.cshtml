@@ -1,0 +1,117 @@
+﻿<div class="container">
+    <hr />
+    <h3 class="text-start">
+        <i class="fas fa-tasks"></i>
+        @Html.ActionLink("Aceptar propuestas de actividades educativas", "/ActivitiesApprobation", new { @class = "btn btn-info" })
+        <hr />
+        <i class="fas fa-user-edit"></i>
+        @Html.ActionLink("Agregar actividad educativa", "/ProposeEducationalActivity", new { @class = "btn btn-info" })
+    </h3>
+
+    <hr />
+
+    <h1 style="margin:10px 0 20px 0;">Actividades Educativas</h1>
+    <div class="form-group has-feedback">
+        <label class="control-label">Buscador</label>
+        <input type="text" id="search" class="form-control" placeholder="Buscar por palabras claves, categorías o tópicos" autocomplete="off" />
+        <i class="glyphicon glyphicon-user form-control-feedback"></i>
+    </div>
+    @foreach (var activity in ViewBag.activities) {
+        if (activity.State == "1") {
+
+            <div id="@activity.Title" class="card rounded-3 bg-dark" style="margin: 15px 0 15px 0;">
+                <div class="card-body">
+                    <br>
+                    <h2 class="text-start">@activity.Title  </h2>
+                    <h4>Impartido por: @activity.Publisher </h4>
+                    <br />
+                    <h9>Fecha: @activity.Date</h9><br>
+                    <h9>Duración: @activity.Duration minutos</h9><br>
+                    @{
+                        string price = (@activity.Price == 0) ? "Gratis" : "₡" + @activity.Price;
+                    }
+                    <h9>Precio:  @price </h9><br>
+                    <h9>Capacidad: @activity.MaximumCapacity personas</h9><br>
+                    <h9>Tipo: @activity.ActivityType</h9><br>
+                    <h9>Modalidad: @activity.TypeOfAssistance</h9><br>
+                    <h9>Nivel de complejidad: @activity.ComplexityLevel</h9>
+                    <span>
+                        <h5>Categoría: <a class=" btn btn-group-sm btn-success"> @activity.Category</a></h5>
+                        <h5>
+                            Tópicos:
+                            @foreach (var topic in activity.Topics) {
+                                <a class="badge rounded-pill bg-info"> @topic</a>
+                            }
+                        </h5>
+
+                    </span>
+                    <h5>
+                        Publicos Meta:
+                        @foreach (var targetAudienceInstance in activity.TargetAudience) {
+                            <a class="badge bg-info"> @targetAudienceInstance</a>
+                        }
+                    </h5>
+                    <p class="card-text" style="margin-top: 15px;">
+                        @activity.Description
+                    </p>
+
+
+                </div>
+            </div>
+        }
+    }
+</div>
+<script>
+    async function main() {
+        document.getElementById("search").addEventListener("keyup", search);
+    }
+
+    function search() {
+        let text = document.getElementById("search").value;      
+        var activities = @Html.Raw(Json.Encode(ViewBag.activities))
+        matchAllTitles(activities, text)
+    }
+    function matchAllTitles(activities,text) {
+        var matching = new Boolean(false);
+        for (var activity in activities) {
+            matching = match(activities[activity].Title, text)
+                || match(activities[activity].Category, text)
+                || matchList(activities[activity].Topics, text)
+                || match(activities[activity].ComplexityLevel, text)
+                || matchList(activities[activity].TargetAudience, text);
+            if (text == "")
+                show(activities[activity].Title)
+            else if (matching)
+                show(activities[activity].Title)
+            else
+                hide(activities[activity].Title)       
+        }
+        return matching;
+    }
+
+    function matchList(list, word) {
+        var matching = new Boolean(false);
+        for (var element in list) {
+            matching = match(list[element], word);
+            if (matching)
+                return matching;
+        }
+        return matching;
+    }
+
+    function match(word, substring) {
+        return word.toLowerCase().includes(substring.toLowerCase());
+    }
+
+    function hide(elementId) {
+        document.getElementById(elementId).style.display = "none";
+    }
+
+    function show(elementId) {
+        document.getElementById(elementId).style.display = "block";
+    }
+
+    main();
+
+</script>
+

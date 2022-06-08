@@ -1,0 +1,191 @@
+﻿
+@model Planetarium.Models.EmployeeModel
+@{
+    ViewBag.Title = "Crear Funcionario";
+
+    List<SelectListItem> Countries = ViewBag.Countries;
+    List<SelectListItem> Languanges = ViewBag.Languages;
+}
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        @if (ViewBag.Message != null) {
+            if (ViewBag.SucessOnCreation) {
+                <div class="alert-success">
+                    <h3> @ViewBag.Message </h3>
+                </div>
+            } else {
+                <div class="alert-danger">
+                    <h3> @ViewBag.Message </h3>
+                </div>
+            }
+        }
+        @using (Html.BeginForm("PostCreateEmployee", "Employees", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+            @Html.AntiForgeryToken()
+            <h1 style="margin: 20px 0 30px 0;">Formulario de creación de funcionario</h1>
+            <div class="form">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-success text-center">INFORMACIÓN BÁSICA</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                @Html.LabelFor(model => model.FirstName)
+                                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col">
+                                @Html.LabelFor(model => model.LastName)
+                                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+
+                                @Html.LabelFor(model => model.Gender)
+                                <br />
+                                <select name="gender" class="form-control">
+                                    <option value="N" selected>Género</option>
+                                    <option value="M">Hombre</option>
+                                    <option value="F">Mujer</option>
+                                    <option value="O">Otro</option>
+                                </select>
+
+                            </div>
+
+                            <div class="col">
+                                @Html.LabelFor(model => model.DateOfBirth)
+                                <br />
+                                @Html.EditorFor(model => model.DateOfBirth, new { @type = "date", @class = "w-100" })
+                                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.Dni)
+                                @Html.TextBoxFor(model => model.Dni, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Dni, "", new { @class = "text-danger", @placeholder = "#########" })
+
+                            </div>
+
+                            <div class="col">
+                                @Html.LabelFor(model => model.NativeCountry)
+                                @Html.DropDownListFor(model => model.NativeCountry, Countries, "- Sin selección - ", new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.Address)
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.Mail)
+                                @Html.TextBoxFor(model => model.Mail, new { @class = "form-control", @placeholder = "john.doe@gmail.com" })
+                            </div>
+                            <div class="col">
+                                @Html.LabelFor(model => model.PhoneNumber)
+                                @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control", @placeholder = "00000000" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.Phrase)
+                                @Html.TextBoxFor(model => model.Phrase, new { @class = "form-control", @placeholder = "¡Me encantan la atmósfera, me deja respirar!" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h4 class="text-success text-center">INFORMACIÓN ADMINISTRATIVA</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.Occupation)
+                                @Html.TextBoxFor(model => model.Occupation, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Occupation, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col">
+                                @Html.LabelFor(model => model.ExpertiseArea)
+                                @Html.TextBoxFor(model => model.ExpertiseArea, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col">
+                                @Html.LabelFor(model => model.AcademicDegree)
+                                @Html.TextBoxFor(model => model.AcademicDegree, new { @class = "form-control" })
+                            </div>
+                            <div class="col">
+                                @Html.LabelFor(model => model.Languages)
+                                @Html.DropDownList("languageSelect", Languanges, "-Seleccione sus idiomas-", new { @class = "form-control", @onchange = "addLanguageButton(this.value)" })
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin: 10px 0 10px 0">
+                            <div class="card-header">
+                                <h4 class="text-success text-center">Idiomas Seleccionados</h4>
+                            </div>
+
+                            <div class="card-body" id="languagesContainer">
+
+                            </div>
+
+                            <input type="text" name="defaultInputString" id="inputLanguageString" style="display: none;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h4 class="text-success text-center">ARCHIVOS ADJUNTOS</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                @Html.LabelFor(model => model.PhotoFile)
+                                <br />
+                                @Html.TextBoxFor(model => model.PhotoFile, new { type = "file", @class = "form-control bg-light" })
+                                @Html.ValidationMessageFor(model => model.PhotoFile, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <input type="submit" style="margin-top: 20px;" class="btn btn-success w-25" value="Crear Funcionario" />
+            </div>
+        }
+    </div>
+    <script src="~/Scripts/GenericMultiselect.js"></script>
+    <script type="text/javascript">
+        let multiSelectLanguages = new GenericMultiSelect("#languageSelect", "#languagesContainer", "#inputLanguageString");
+    </script>
+
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+</html>
